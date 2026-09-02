@@ -1,0 +1,4 @@
+interface:
+  display_name: "Problem Framing"
+  short_description: "Clarify goals, facts, assumptions, and constraints"
+  default_prompt: "Use $problem-framing to clarify the following problem:"

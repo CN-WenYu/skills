@@ -1,0 +1,4 @@
+interface:
+  display_name: "Example Deconstruction"
+  short_description: "Extract transferable principles from real examples"
+  default_prompt: "Use $deconstruct-examples to analyze this example:"

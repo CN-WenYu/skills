@@ -1,0 +1,4 @@
+interface:
+  display_name: "Evidence Research"
+  short_description: "Research claims with sources, dates, and evidence"
+  default_prompt: "Use $evidence-research to research this question:"

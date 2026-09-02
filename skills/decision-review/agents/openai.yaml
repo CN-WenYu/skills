@@ -1,0 +1,4 @@
+interface:
+  display_name: "Decision Review"
+  short_description: "Evaluate tradeoffs and define a decision path"
+  default_prompt: "Use $decision-review to assess the following decision:"

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Progressive Rule Disclosure"
+  short_description: "Organize durable project rules with focused references"
+  default_prompt: "Use $project-rules-progressive-disclosure to organize these project rules:"

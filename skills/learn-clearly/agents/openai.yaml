@@ -1,0 +1,4 @@
+interface:
+  display_name: "Two-Layer Explanation"
+  short_description: "Explain concepts intuitively and technically"
+  default_prompt: "Use $learn-clearly to explain the following concept:"
