@@ -1,0 +1,4 @@
+interface:
+  display_name: "UI Pattern Advisor"
+  short_description: "Identify and choose UI components, interactions, and motion"
+  default_prompt: "Use $ui-pattern-advisor to identify or recommend the right UI pattern for this interface."

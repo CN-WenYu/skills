@@ -41,6 +41,8 @@ Skills install into the current project by default. Use `--global` for a user-le
 | [`deconstruct-examples`](skills/deconstruct-examples/SKILL.md) | You need to analyze a page, product, workflow, proposal, or code example | Transferable principles, an operating checklist, and a low-risk trial |
 | [`evidence-research`](skills/evidence-research/SKILL.md) | You need to verify facts, compare cases, or transfer an idea across domains | Traceable evidence, qualified conclusions, and open questions |
 | [`project-rules-progressive-disclosure`](skills/project-rules-progressive-disclosure/SKILL.md) | You need to add, organize, or split durable project rules | A lightweight entrypoint and focused, on-demand reference documents |
+| [`ui-pattern-advisor`](skills/ui-pattern-advisor/SKILL.md) | You need to identify, explain, or choose UI components, interactions, or motion | Canonical terms, disambiguation, and contextual recommendations |
+| [`ui-knowledge-curator`](skills/ui-knowledge-curator/SKILL.md) | You want to persist UI knowledge from images, links, or text | A deduplicated, classified, and validated UI knowledge library |
 
 ## Using An Installed Skill
 
@@ -50,6 +52,8 @@ Explicitly name the skill and describe the task:
 Use $decision-review to compare these two architecture options.
 Use $problem-framing to clarify why this bug is difficult to reproduce.
 Use $evidence-research to verify this technical claim.
+Use $ui-pattern-advisor to identify this interaction and recommend the right component.
+Use $ui-knowledge-curator to organize this material into the UI knowledge library.
 ```
 
 Agents that support automatic discovery can also select a skill from task semantics. Explicit invocation is best when you want to choose the thinking mode yourself.
@@ -69,6 +73,8 @@ skills/
 ```
 
 The YAML front matter in `SKILL.md` must contain a `name` matching the directory and a clear, discriminating `description`. Keep only decision-changing guidance in the body. Put long, low-frequency workflows and reference material in `references/` and state when to read them.
+
+`ui-pattern-advisor` is the single owner of UI knowledge. Its cards are organized by component, interaction, and motion and loaded through on-demand indexes; `ui-knowledge-curator` maintains those cards and writes to the source repository only when the user explicitly asks to collect or organize material.
 
 ## Publishing And Validation
 

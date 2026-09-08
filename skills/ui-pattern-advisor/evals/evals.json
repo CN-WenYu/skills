@@ -1,0 +1,49 @@
+{
+  "skill_name": "ui-pattern-advisor",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "我看到一个卡片列表：按住卡片上下拖动时，其他卡片会让出一个空位，松手后顺序真的改变。这个交互的专业名称是什么？它和普通拖拽、碰撞回弹有什么区别？",
+      "expected_output": "Identify Drag-to-Reorder, explain the insertion-position state model, and distinguish semantic reordering from free dragging and collision response.",
+      "files": [],
+      "expectations": [
+        "The answer names Drag-to-Reorder as the primary match.",
+        "The answer explains that neighboring items expose a prospective insertion position.",
+        "The answer distinguishes semantic order changes from freeform drag and collision response."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "设置页里有个国家字段，选项固定为 20 个；用户只需要选一个，不能输入自定义内容。设计稿写的是 dropdown。我们应该使用 Menu、Select、Combobox 还是 Autocomplete？",
+      "expected_output": "Choose Select based on bounded single-value semantics and explain why dropdown is ambiguous and the alternatives do not fit.",
+      "files": [],
+      "expectations": [
+        "The answer selects Select rather than treating Dropdown as a canonical component.",
+        "The answer rejects Menu because the items are values rather than commands.",
+        "The answer rejects Combobox and Autocomplete because free text or typeahead is unnecessary."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "首页第一次打开要加载固定结构的新闻卡片，通常需要 1 到 2 秒，但我们不知道精确百分比。应该放一个全屏 Spinner、进度条还是骨架屏？也说明失败和减少动态效果时怎么处理。",
+      "expected_output": "Recommend a skeleton screen, keep the known layout stable, reject fake determinate progress and unnecessary full-screen blocking, and cover error and reduced-motion states.",
+      "files": [],
+      "expectations": [
+        "The answer recommends Skeleton Screen for the known card structure.",
+        "The answer does not invent determinate progress when no trustworthy fraction exists.",
+        "The answer includes a terminal error state and reduced-motion treatment."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "我想让后台管理系统里的每个表格行在鼠标经过时都跟着光标移动一点，按钮也有弹簧回弹，让页面更高级。请判断应该用什么动画并给出建议。",
+      "expected_output": "Reject gratuitous high-frequency motion for dense work UI, explain the usability cost, and recommend static or minimal state feedback.",
+      "files": [],
+      "expectations": [
+        "The answer explicitly allows or chooses no animation for table-row pointer attraction.",
+        "The answer connects the decision to high frequency and dense work UI.",
+        "The answer recommends restrained semantic hover or press feedback instead of decorative motion."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "UI Knowledge Curator"
+  short_description: "Organize UI references into a validated knowledge library"
+  default_prompt: "Use $ui-knowledge-curator to organize this UI knowledge into the reference library."

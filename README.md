@@ -41,6 +41,8 @@ npx skills@latest add CN-WenYu/skills --all
 | [`deconstruct-examples`](skills/deconstruct-examples/SKILL.md) | 要分析页面、产品、流程、方案或代码案例 | 可迁移原则、操作清单和低风险试做 |
 | [`evidence-research`](skills/evidence-research/SKILL.md) | 需要核查事实、比较案例或跨领域借解 | 可追溯证据、限定结论与待确认问题 |
 | [`project-rules-progressive-disclosure`](skills/project-rules-progressive-disclosure/SKILL.md) | 要新增、整理或拆分长期项目规则 | 轻量入口规则与按需读取的专题文档 |
+| [`ui-pattern-advisor`](skills/ui-pattern-advisor/SKILL.md) | 要识别、解释或选择 UI 组件、交互与动效 | 规范术语、模式消歧和场景化推荐 |
+| [`ui-knowledge-curator`](skills/ui-knowledge-curator/SKILL.md) | 要把图片、链接或文字中的 UI 知识持久化 | 去重、分类并校验后的 UI 知识库 |
 
 ## 安装后如何使用
 
@@ -50,6 +52,8 @@ npx skills@latest add CN-WenYu/skills --all
 Use $decision-review to compare these two architecture options.
 Use $problem-framing to clarify why this bug is difficult to reproduce.
 Use $evidence-research to verify this technical claim.
+Use $ui-pattern-advisor to identify this interaction and recommend the right component.
+Use $ui-knowledge-curator to organize this material into the UI knowledge library.
 ```
 
 技能也可由支持自动发现的代理按任务语义选择。明确调用更适合希望指定思考方式的场景。
@@ -69,6 +73,8 @@ skills/
 ```
 
 `SKILL.md` 的 YAML front matter 必须包含与目录一致的 `name` 和清晰、可区分的 `description`。正文仅保留会改变代理决策的说明；低频的长流程或参考资料放到 `references/`，并在正文中说明读取时机。
+
+`ui-pattern-advisor` 是 UI 知识的唯一所有者。其知识卡片按组件、交互和动效分层，并通过目录索引按需读取；`ui-knowledge-curator` 负责维护这些卡片，只在用户明确要求收录或整理资料时写入源仓库。
 
 ## 发布与验证
 
