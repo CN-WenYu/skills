@@ -5,8 +5,8 @@ name_zh: 手势驱动转场
 kind: interaction-pattern
 term_status: standard
 platforms: [ios, android, web]
-aliases: [interactive-transition, gesture-controlled-navigation, 交互式转场]
-tags: [gesture, navigation, transition, interactive]
+aliases: [interactive-transition, gesture-controlled-navigation, interactive-back-gesture, edge-swipe-back, 交互式转场, 跟手返回]
+tags: [gesture, navigation, transition, interactive, back]
 confidence: high
 last_reviewed: 2026-09-08
 ---
@@ -23,7 +23,7 @@ It makes spatial navigation directly manipulable and keeps the result predictabl
 
 ## Recognition cues
 
-View position tracks the finger or pointer, progress is reversible, and release outcome depends on distance, velocity, and direction.
+View position tracks the finger or pointer, the actual destination is progressively revealed, progress is reversible, and release outcome depends on distance, velocity, and direction.
 
 ## Use when
 
@@ -35,15 +35,15 @@ Avoid when the gesture conflicts with scrolling or system navigation, hides the 
 
 ## States and behavior
 
-Idle, tracking, committed, cancelled, and settling states; derive progress from movement, then settle from current position using velocity and thresholds.
+Idle, tracking, committed, cancelled, and settling states; capture stable start and destination states before tracking, derive progress from movement, then settle from the current visual position using velocity and thresholds.
 
 ## Variants
 
-Edge-swipe back, swipe-to-close, interactive sheet dismissal, and gallery paging.
+Edge-swipe back, full-screen swipe back, swipe-to-close, interactive sheet dismissal, and gallery paging.
 
 ## Platform notes
 
-Integrate with system navigation, back, scroll, and gesture arbitration rather than replacing them casually.
+Integrate with system navigation, back, scroll, and gesture arbitration rather than replacing them casually. Edge regions, system back gestures, and nested horizontal scrolling need explicit precedence.
 
 ## Accessibility and performance
 
@@ -55,4 +55,4 @@ A gesture-triggered transition starts after a swipe; a gesture-driven transition
 
 ## Related patterns
 
-[Shared-element Image Expansion](../../motion/transitions/shared-element-image-expansion.md) and [Velocity-based Slider Snap](../direct-manipulation/velocity-based-slider-snap.md).
+[Shared-element Image Expansion](../../motion/transitions/shared-element-image-expansion.md), [Gesture Axis Lock](../direct-manipulation/gesture-axis-lock.md), and [Interruptible Motion](../../motion/behavior/interruptible-motion.md).
