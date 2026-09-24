@@ -1,0 +1,11 @@
+{
+  "name": "logo-lottie-skill-runtime",
+  "private": true,
+  "version": "1.0.0",
+  "dependencies": {
+    "lottie-web": "5.12.2"
+  },
+  "devDependencies": {
+    "playwright": "1.58.2"
+  }
+}

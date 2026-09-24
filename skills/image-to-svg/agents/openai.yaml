@@ -1,0 +1,4 @@
+interface:
+  display_name: "Image to SVG"
+  short_description: "Inspect intent, preserve colors, and verify SVG tracing"
+  default_prompt: "Use $image-to-svg to inspect my logo, preserve its source appearance by default, ask about necessary visual changes, and convert it into verified editable SVG paths."

@@ -1,0 +1,1 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 100"><path id="connection" d="M35 50 C50 24 70 24 85 50" fill="none" stroke="#167c87" stroke-width="5" stroke-linecap="round"/><circle id="sender" cx="25" cy="58" r="16" fill="#173e60"/><circle id="receiver" cx="95" cy="58" r="16" fill="#e57d48"/></svg>

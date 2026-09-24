@@ -1,0 +1,69 @@
+{
+  "skill_name": "image-to-svg",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Convert this transparent white logo to SVG. Preserve its current background and original colors.",
+      "expected_output": "Convert with preserve, keep white foreground, render against light/dark matte; never globally remove white.",
+      "files": [
+        "fixtures/transparent-white-icon.png"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Convert this logo into SVG.",
+      "expected_output": "Inspect, announce source-preserving default, and explicitly pass preserve. Do not automatically remove the white background or ask a mandatory retention question; pause if actual fidelity problems are detected.",
+      "files": [
+        "fixtures/white-background.png"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Remove only the outside white background and convert to SVG; enclosed white details belong to the logo.",
+      "expected_output": "Use edge-connected removal after inspecting; preserve enclosed white and the red foreground; validate colors and alpha.",
+      "files": [
+        "fixtures/white-background.png"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Convert this transparent red icon to SVG; preserve the original color.",
+      "expected_output": "Keep red unchanged; no white normalization; actual render must preserve color.",
+      "files": [
+        "fixtures/transparent-red-icon.png"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Convert this gradient-backed artwork to a small editable SVG.",
+      "expected_output": "Identify gradient/complex input and ask about reconstruction/source artwork; do not produce many flat paths or claim recovery.",
+      "files": [
+        "fixtures/gray-gradient.png"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Convert this logo, but ask before choosing any unspecified visual option.",
+      "expected_output": "Honor the explicit request: inspect and ask preserve/remove if unresolved. Defaults never override user instructions.",
+      "files": [
+        "fixtures/white-background.png"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "The native question tool was called for the background decision, but I have not answered yet.",
+      "expected_output": "Keep conversion pending and the task waiting. Do not send final_answer, close/end the task, install tools, trace or deliver an SVG. A successful or immediate asynchronous call is not consent.",
+      "files": [
+        "fixtures/white-background.png"
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "The native prompt was cancelled or closed before any answer was submitted. No background mode has been chosen.",
+      "expected_output": "Do not select the recommendation or convert. Respect explicit cancellation/stop without reopening repeatedly; recover a failed or invisible prompt with a visible unanswered question. Reuse prior answers, and resume only if a later user message actually resolves the background decision.",
+      "files": [
+        "fixtures/white-background.png"
+      ]
+    }
+  ]
+}

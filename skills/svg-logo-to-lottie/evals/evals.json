@@ -1,0 +1,293 @@
+{
+  "skill_name": "svg-logo-to-lottie",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Animate this logo and add the application name Nova.",
+      "expected_output": "Identify standalone versus app-project context. Reuse supplied branding, list real font choices and ask unresolved color/corners. Use the host native question tool when supported and show every numbered text effect, with hop recommended, plus delegation/custom intent. Use concrete textual questions only on tool unavailability/failure. Do not draft before answers; preselection is not consent.",
+      "files": [
+        "fixtures/logo.svg"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Preserve this SVG, it has no text or icon backplate; export transparent on a #ffffff preview. No wordmark. Make an entrance animation.",
+      "expected_output": "Use approved decisions without repeating questions; doctor, inspect and real Lottie draft; Web/manual review then ask approval; never claim native QA.",
+      "files": [
+        "fixtures/logo.svg"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Convert this blurred logo faithfully to native-vector Lottie.",
+      "expected_output": "Report unsupported filter and ask for an outlined/simplified alternative; do not silently drop blur, rasterize, or mark approved.",
+      "files": [
+        "fixtures/unsupported.svg"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "The real Lottie preview looks good, but change the background to blue.",
+      "expected_output": "Clarify whether blue is preview matte, brand backplate or exported layer unless context already resolves it; regenerate affected draft and re-review instead of reusing approval.",
+      "files": [
+        "fixtures/logo.svg"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Create a native logo animation but the selected font file is missing.",
+      "expected_output": "Report missing font and ask for the intended font; do not substitute Arial/system font or deliver an unverified result.",
+      "files": [
+        "fixtures/logo.svg"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Animate this app icon with the name Nova. Keep the background.",
+      "expected_output": "Keep the icon backplate, but ask about corners if no explicit project/user corner choice. Ask unresolved color and list real fonts together. Design a backplate opacity entrance and material-specific foreground tracks; retention does not imply static visibility or full-canvas fill.",
+      "files": [
+        "fixtures/icon-backplate.svg"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "The green belongs only inside the icon; the outer animation is transparent. Put Nova outside below the icon, black text on a white preview, using my Brand.ttf at 30 pixels. Retain square corners. Let the green backplate appear first, followed by the foreground and hopping name. The SVG has no existing wordmark. Preserve source colors. The font is available in the workspace.",
+      "expected_output": "Reuse specified layout, colors, corners and sequence; map reviewed groups to authored tracks and explain material-specific foreground actions. Verify Brand.ttf actual weight; if 700 is unavailable ask about its intended weight, never silently substitute. Keep the name below the full animated icon, validate and show unapproved actual Lottie.",
+      "files": [
+        "fixtures/icon-backplate.svg"
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "Use a 20-unit corner radius on this icon backplate, keep the canvas transparent, and make only the foreground enter while the backplate stays visible from the start. No extra application name. Preserve all source colors and use a white preview. There is no existing wordmark.",
+      "expected_output": "Reuse explicit corners and static plate instruction, recording the latter as user_request. No repeated questions; design foreground tracks and check containment.",
+      "files": [
+        "fixtures/icon-backplate.svg"
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "Animate this network mark for the app Link. Use sensible defaults; app-purpose details are optional.",
+      "expected_output": "Analyze the nodes and actual open connection as a relationship. Choose supported actions with meaningful cause/effect, not a copied generic bounce. The user explicitly accepted defaults, so record hop acceptance without reasking text motion; reuse explicit project/user choices. Optional purpose does not block work.",
+      "files": [
+        "fixtures/network.svg"
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "Create a restrained splash for Seal from this interlocking emblem. Use defaults.",
+      "expected_output": "Recognize the indivisible silhouette and consider a restrained entrance or stillness. The user explicitly requested defaults: record hop acceptance without reasking text motion. Ask only unresolved visual choices and avoid reading restrained style as a conflicting text selection.",
+      "files": [
+        "fixtures/seal.svg"
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "Make the filled arrow draw from tail to head while preserving its exact appearance.",
+      "expected_output": "Inspect the filled closed arrow and explain that native trim-path support is for open strokes, not its perimeter. Ask about approved stroke reconstruction or another faithful supported entrance; do not silently approximate, rasterize or claim a perimeter trace meets the request.",
+      "files": [
+        "fixtures/filled-arrow.svg"
+      ]
+    },
+    {
+      "id": 12,
+      "prompt": "Before making this animation, ask me about every unspecified visual choice.",
+      "expected_output": "Honor this explicit instruction over the fewer-questions defaults, while bundling substantive choices and reusing prior answers. Do not claim the skill default overrides the user.",
+      "files": [
+        "fixtures/logo.svg"
+      ]
+    },
+    {
+      "id": 13,
+      "prompt": "Make a splash for this logo. The name is provided but no font is supplied.",
+      "expected_output": "Scan the local machine with fonts NAME. Present 3–5 distinct available families at real weight 700 covering the whole name, with recommendation, and ask the user to choose. Fewer candidates must be reported honestly; do not silently select first or list uninstalled fonts.",
+      "files": [
+        "fixtures/logo.svg"
+      ]
+    },
+    {
+      "id": 14,
+      "prompt": "Keep the gradient logo background and accept smooth vector reconstruction. Make the splash restrained.",
+      "expected_output": "Reconstruction consent does not decide corners/font/color, first-frame background visibility or text motion. Bundle unresolved choices through the available native tool, including every numbered text effect. Do not bypass gradient tracing refusal with direct VTracer.",
+      "files": [
+        "fixtures/icon-backplate.svg"
+      ]
+    },
+    {
+      "id": 15,
+      "prompt": "Within this app project, make a splash animation using its existing branding. The active splash uses a bundled Brand-Bold.ttf and light/dark text tokens; both themes are supported.",
+      "expected_output": "Resolve actual target branding/font/theme and motion references before trusting prompt assertions. Reuse verified values and prepare both supported themes. Present the complete numbered text menu only if its choice/delegation is missing. No generic project scanner or new dependency.",
+      "files": [
+        "fixtures/icon-backplate.svg"
+      ]
+    },
+    {
+      "id": 16,
+      "prompt": "Can I choose between two different motion approaches? This project also has light and dark themes.",
+      "expected_output": "Offer substantively different foreground concepts, not merely delay/scale variants. Keep branding and the selected text treatment consistent; ask the full numbered text menu if unresolved. Adapt selected motion to verified themes without silently multiplying variants.",
+      "files": [
+        "fixtures/network.svg"
+      ]
+    },
+    {
+      "id": 17,
+      "prompt": "The project has several flavors and two logos in its README. Use whichever you think is right.",
+      "expected_output": "Inspect actual active target resource references and splash implementation. If unresolved, ask the target rather than guess from README, launcher asset or theme accent. Explain what evidence is missing.",
+      "files": [
+        "fixtures/logo.svg"
+      ]
+    },
+    {
+      "id": 18,
+      "prompt": "I chose Arial Bold, white text and 20-unit corners earlier. Keep the plate visible from the start and use a whole-line rise this time.",
+      "expected_output": "Reuse prior exact choices and record the two explicit motion overrides as user_request. Do not reask corners/font/color or force the default hop/plate entrance against the user instruction.",
+      "files": [
+        "fixtures/icon-backplate.svg"
+      ]
+    },
+    {
+      "id": 19,
+      "prompt": "帮我做一个启动页的动画。当前目录是我的 App 项目，我没有另附图片。",
+      "expected_output": "Route to svg-logo-to-lottie on splash intent, without requiring the user to say SVG/Lottie. Inspect actual project target/splash/assets/name/themes/fonts first; report found/missing/conflicting information and cite sources. Do not assume task means install or modify OS launch UI.",
+      "files": []
+    },
+    {
+      "id": 20,
+      "prompt": "给这个 App 做开屏动效。项目只有包名，没有可用 Logo 或显示名称。",
+      "expected_output": "Inspect before relying on the absence claim. Explicitly report missing usable logo and visible app name with the inspected locations; ask for those inputs. Do not use the package id as a brand, create a placeholder logo or claim generation is complete.",
+      "files": []
+    },
+    {
+      "id": 21,
+      "prompt": "This is a scratch directory, not an app project. Animate my attached icon as a splash for Nova. Ask me before deciding unspecified backgrounds, fonts, corners or material roles. Ask before installing missing dependencies. FontTools is installed but HarfBuzz is missing.",
+      "expected_output": "Inspect the supplied asset without searching unrelated projects. List real bold font candidates with shaping pending when HarfBuzz is missing. Prefer the native question tool for unresolved scope/corners/color/font and all numbered text effects; keep installation approval separate and additional choreography optional. On tool success do not duplicate the questionnaire; on failure/unavailability ask concretely in text. Wait for actual answers before generation.",
+      "files": [
+        "fixtures/icon-backplate.svg"
+      ]
+    },
+    {
+      "id": 22,
+      "prompt": "Outside any app project, use my uploaded gradient/soft-shadow logo and the name Nova. The image inspection requires a fidelity decision. A question tool is unavailable or failed; no answer has been received. What do you need from me?",
+      "expected_output": "Explain the supported fidelity boundary based on the inspection and ask about original vector artwork or an explicitly described reconstruction. Do not silently trace or drop shadows. Present pending choices directly in the final reply, including real font options if enumeration is available and any missing-dependency approval separately. No claim of successful question delivery, consent, generated preview or approved animation. Do not invent project colors/themes. Ask only unresolved choices and make purpose/extra preview optional.",
+      "files": []
+    },
+    {
+      "id": 23,
+      "prompt": "Make a splash with a 400-unit icon and the name Nova. I chose Arial Bold and white text. Size and spacing are unspecified; use the skill defaults.",
+      "expected_output": "Leave size/gap unset for proportional layout: actual final icon width 400 yields em size 72 and settled visible-edge gap 48. Preserve chosen font/color. Separate motion safety from settled spacing; do not insert former 32/24 defaults. If chosen canvas cannot contain the composition, explain the constraint and ask rather than shrinking explicit icon/name values.",
+      "files": [
+        "fixtures/logo.svg"
+      ]
+    },
+    {
+      "id": 24,
+      "prompt": "Use the project's explicit size 58 and gap 36, with my 400-unit icon. Provide offline previews for two approved choreography drafts, with JSON downloads.",
+      "expected_output": "Preserve the explicit size/gap. Each independent preview plays and downloads the same embedded JSON. Compare via those previews rather than duplicating Base64 animation payloads. Run actual download verification with parsing, filename and SHA-256, including after matte changes. Downloading does not approve a draft; select/approve exact files separately.",
+      "files": [
+        "fixtures/icon-backplate.svg"
+      ]
+    },
+    {
+      "id": 25,
+      "prompt": "The exported animation JSON is too large. Make it smaller without changing the logo or animation. I need directly loadable JSON, not an archive.",
+      "expected_output": "Inspect actual JSON bytes and path/keyframe/layer costs with size, distinguishing JSON from the offline player HTML. Use default exact numeric and redundant-keyframe cleanup without changing geometry, names, paint, changing intervals or interior pauses. Report measured savings and regenerate/revalidate the matching preview before approval. Do not silently round coordinates, simplify paths, remove name outlines or deliver ZIP/gzip/.lottie as smaller JSON.",
+      "files": [
+        "fixtures/network.svg"
+      ]
+    },
+    {
+      "id": 26,
+      "prompt": "I explicitly accept three decimal places for path and position coordinates to reduce this draft. Keep its colors and timing, and show the result before I approve.",
+      "expected_output": "Reuse this choice without asking again; record coordinate_precision 3 with the actual request. Preserve paint/gradient stops, scale, angle, time and easing precision. Generate the matching exact unrounded baseline and candidate, validate with --reference-json, inspect both at intended scale and report savings plus sampled black/white/alpha differences. Local error alone is not visual equivalence. Do not approve a changed or un-compared candidate.",
+      "files": [
+        "fixtures/network.svg"
+      ]
+    },
+    {
+      "id": 27,
+      "prompt": "Most of my JSON is outlined text and complex traced paths. Can you guarantee it below 20 KB by dropping nodes?",
+      "expected_output": "Measure actual path/vertex costs and explain why there is no universal size guarantee. Prefer compact original vector material and native curves. Ask before approximate simplification or reconstruction, describing fidelity impact; do not densely resample curves, lower tracing quality, remove holes/groups, round every number or rasterize silently. Keep visual comparison and user approval tied to the actual candidate.",
+      "files": [
+        "fixtures/logo.svg"
+      ]
+    },
+    {
+      "id": 28,
+      "prompt": "A fictional utility has an articulated pointer, small separate dots and a completion ring in its logo. Design a meaningful startup animation; I have not selected text motion. A native question tool is available with unrestricted options.",
+      "expected_output": "Inspect actual groups and relationships. Propose a supported action concept with sensible pivot, curved travel/contact and occlusion if relevant, not a default fade/bounce for every part or a copied cleaning storyboard. Use the native tool to list 1 hop, 2 rise, 3 fade, 4 spacing convergence, 5 directional reveal, 6 agent choice, 7 custom intent, each concrete and with a recommendation. Do not hide effects behind Other or treat the recommendation as answered. Match claimed actions to exported primitives.",
+      "files": []
+    },
+    {
+      "id": 29,
+      "prompt": "I chose gentle whole-line rise earlier. Now the question tool is Plan-only, this Agent is in execution mode, and only the icon corner choice is missing.",
+      "expected_output": "Keep rise and prior answers. Do not call the unavailable Plan-only tool or reask all text effects. Use another suitable native question tool if present; otherwise ask the unresolved corner question directly and explain tool fallback briefly. Never switch modes or install a tool just to ask.",
+      "files": [
+        "fixtures/icon-backplate.svg"
+      ]
+    },
+    {
+      "id": 30,
+      "prompt": "Ask me about text animation. The native question tool accepts at most three options but supports a free-text question prompt. The artwork requires no other decision.",
+      "expected_output": "Prefer one native free-text question with all seven numbered concrete choices and descriptions in its prompt, accepting a number or custom description. Do not collapse supported effects into Other, omit effects to fit three options, or launch a separate textual questionnaire after successful delivery. Leave generation pending until the answer.",
+      "files": [
+        "fixtures/logo.svg"
+      ]
+    },
+    {
+      "id": 31,
+      "prompt": "The native question tool was called successfully, but I have not answered yet. Continue making the splash while the prompt is visible.",
+      "expected_output": "Keep the unanswered native prompt pending without final/final_answer or ending the turn. Continue only independent work, then use the host-supported interruptible wait until the answer arrives. Do not infer visual choices from the request to continue; dependent conversion, installation, drafting, export and approval stay paused.",
+      "files": [
+        "fixtures/icon-backplate.svg"
+      ]
+    },
+    {
+      "id": 32,
+      "prompt": "The native question API returned immediately because it is asynchronous; no user answer has arrived.",
+      "expected_output": "Treat immediate tool return as acknowledgement, not consent or completion. After independent work, call the available host wait/yield mechanism rather than sending a final answer. Bounded wait expiry is not question timeout. Resume only after the later user answer; never apply a recommendation merely because time passed.",
+      "files": [
+        "fixtures/logo.svg"
+      ]
+    },
+    {
+      "id": 33,
+      "prompt": "The host reports that the native question prompt expired or was closed without a submitted answer. No new user instruction has arrived.",
+      "expected_output": "Leave unanswered decisions unresolved; neither timeout nor closure accepts recommendations. Recover through a supported question tool or a visible text handoff if native delivery failed. Do not fabricate choices or generate dependent output. If closure was an explicit user cancellation/stop, respect it instead of repeatedly reopening the prompt.",
+      "files": [
+        "fixtures/logo.svg"
+      ]
+    },
+    {
+      "id": 34,
+      "prompt": "This Agent cannot keep a native question prompt pending, so it must use a text fallback.",
+      "expected_output": "Explain the native tool limitation and put the actual unresolved questions in a persistent text reply following host restrictions. Yield for the next user message with dependent work paused, accurately describing any already completed inspection. Ending this fallback turn is not task completion. Do not claim a prompt remains open or merely say questions were sent.",
+      "files": [
+        "fixtures/logo.svg"
+      ]
+    },
+    {
+      "id": 35,
+      "prompt": "After an earlier prompt closed, I now explicitly accept the listed recommendations for corners, font, color and text motion. Continue; I have not authorized missing dependency installation.",
+      "expected_output": "Use this actual answer as acceptance of the listed visual recommendations and retain earlier answers without reasking. Resume work allowed by those decisions; dependency installation still needs separate authorization. Closure alone was not consent, but the later explicit answer is.",
+      "files": [
+        "fixtures/icon-backplate.svg"
+      ]
+    },
+    {
+      "id": 36,
+      "prompt": "I answered the font question with option 2. I did not answer the separate corner question and have not cancelled the task.",
+      "expected_output": "Retain the selected font and earlier answers. Keep the corner decision pending and ask only that unresolved choice using the supported input lifecycle; do not reask the font, silently choose corners or generate a dependent draft.",
+      "files": [
+        "fixtures/icon-backplate.svg"
+      ]
+    },
+    {
+      "id": 37,
+      "prompt": "You said questions were sent, but I cannot see any question card. My earlier font selection is still valid.",
+      "expected_output": "Treat this as a delivery failure rather than successful intake. Preserve the prior font answer. Recover the actual unanswered choices through a working native tool or a persistent text fallback with a brief explanation; do not repeat only a questions-sent status, claim task completion or invent answers.",
+      "files": [
+        "fixtures/icon-backplate.svg"
+      ]
+    }
+  ]
+}
