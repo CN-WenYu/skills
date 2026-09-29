@@ -148,6 +148,48 @@ def validate_artwork(config):
         validate_motion(motion)
 
 
+def validate_wordmark_motion(motion):
+    from choreography import validate_easing, validate_keyframes
+    allowed(motion, {'preset', 'tracks', 'rationale', 'start', 'duration', 'stagger',
+                     'stagger_window', 'amplitude', 'anchor', 'user_request'}, 'wordmark motion')
+    if not isinstance(motion.get('user_request'), str) or not motion['user_request'].strip():
+        raise DecisionRequired('Record user_request with the actual text choice, accepted proposal or delegation; never invent consent.')
+    if ('preset' in motion) == ('tracks' in motion):
+        raise DecisionRequired('Choose exactly one explicit wordmark preset or authored tracks; delegation alone does not choose a preset.')
+    if motion.get('anchor', 'baseline') not in ('baseline', 'center'):
+        raise DecisionRequired('Unsupported wordmark anchor.')
+    if 'rationale' in motion and (not isinstance(motion['rationale'], str) or not motion['rationale'].strip()):
+        raise DecisionRequired('Wordmark rationale must explain its relationship to the logo motion.')
+    if 'preset' in motion:
+        if motion['preset'] not in ('hop', 'rise', 'fade', 'gather', 'reveal'):
+            raise DecisionRequired('Unsupported wordmark preset; use authored tracks for supported custom motion.')
+        for key in ('start', 'stagger', 'stagger_window', 'amplitude'):
+            if key in motion: positive(motion[key], f'wordmark {key}', -1e-9)
+        if 'duration' in motion: positive(motion['duration'], 'wordmark duration')
+        return
+    allowed(motion, {'tracks', 'rationale', 'anchor', 'user_request'}, 'authored wordmark motion')
+    if 'rationale' not in motion:
+        raise DecisionRequired('Explain the authored wordmark motion in rationale.')
+    tracks = motion['tracks']
+    if not isinstance(tracks, list) or not tracks:
+        raise DecisionRequired('Wordmark tracks must be a nonempty list.')
+    for track in tracks:
+        allowed(track, {'target', 'units', 'keyframes', 'easing'}, 'wordmark track')
+        if ('target' in track) == ('units' in track):
+            raise DecisionRequired('Choose target line or explicit shaped units for each wordmark track.')
+        if 'target' in track:
+            if track['target'] != 'line' or len(tracks) != 1:
+                raise DecisionRequired('A whole-line wordmark uses one target line track.')
+        else:
+            units = track['units']
+            if (not isinstance(units, list) or not units or
+                    any(isinstance(i, bool) or not isinstance(i, int) or i < 0 for i in units) or
+                    len(set(units)) != len(units)):
+                raise DecisionRequired('Wordmark units must be unique nonnegative shaped-unit indices.')
+        validate_easing(track.get('easing', [.25, 0, .75, 1]))
+        validate_keyframes(track.get('keyframes'))
+
+
 def load_config(path):
     path = Path(path).resolve()
     config = json.loads(path.read_text())
@@ -227,19 +269,7 @@ def load_config(path):
         index = wordmark.setdefault('font_index', 0)
         if not isinstance(index, int) or isinstance(index, bool) or index < 0:
             raise DecisionRequired('font_index must be a nonnegative integer.')
-        wm = wordmark.setdefault('motion', {})
-        allowed(wm, {'preset', 'start', 'duration', 'stagger', 'stagger_window', 'amplitude', 'anchor', 'user_request'}, 'wordmark motion')
-        if wm.get('preset', 'hop') not in ('hop','rise','fade','gather','reveal') or wm.get('anchor','baseline') not in ('baseline','center'):
-            raise DecisionRequired('Unsupported wordmark motion or anchor.')
-        request = wm.get('user_request')
-        if request is not None and (not isinstance(request, str) or not request.strip()):
-            raise DecisionRequired('wordmark.motion.user_request must quote the actual user instruction.')
-        if not request:
-            raise DecisionRequired('Record user_request with the selected text effect or explicit delegation to choose; agent rationale alone is not a user choice.')
-        wm.setdefault('preset', 'hop')
-        for key in ('start','stagger','stagger_window','amplitude'):
-            if key in wm: positive(wm[key], f'wordmark {key}', -1e-9)
-        if 'duration' in wm: positive(wm['duration'], 'wordmark duration')
+        validate_wordmark_motion(wordmark.get('motion', {}))
     options = config.setdefault('image_options', {})
     allowed(options, {'mode', 'fill', 'alpha_threshold', 'no_svgo'}, 'image options')
     if options.get('mode', 'auto') not in ('auto', 'spline', 'polygon', 'pixel'):

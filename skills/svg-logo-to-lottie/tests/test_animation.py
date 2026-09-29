@@ -44,7 +44,7 @@ class AnimationTests(unittest.TestCase):
     def test_text_overshoot_remains_inside_canvas(self):
         font = Path('/System/Library/Fonts/Supplemental/Arial.ttf')
         if not font.exists(): self.skipTest('Arial unavailable')
-        self.config['wordmark'] = {'text': 'Logo', 'font': str(font), 'size': 30, 'color': '#222222'}
+        self.config['wordmark'] = {'text': 'Logo', 'font': str(font), 'motion': {'preset': 'hop', 'user_request': 'Use hops.'}, 'size': 30, 'color': '#222222'}
         animation, report = self.build(self.asset, self.config)
         self.assertEqual(len(animation['layers']), 5)
         for box in report['animated_bounds']:
@@ -58,7 +58,7 @@ class AnimationTests(unittest.TestCase):
         font = Path('/System/Library/Fonts/Supplemental/Arial.ttf')
         if not font.exists(): self.skipTest('Arial unavailable')
         self.config['canvas'] = {'width': 800, 'height': 760, 'padding': 40, 'icon_width': 400}
-        self.config['wordmark'] = {'text': 'Logo', 'font': str(font), 'color': '#222222'}
+        self.config['wordmark'] = {'text': 'Logo', 'font': str(font), 'motion': {'preset': 'hop', 'user_request': 'Use hops.'}, 'color': '#222222'}
         animation, report = self.build(self.asset, self.config)
         self.assertEqual(self.config['wordmark']['size'], 72)
         self.assertEqual(self.config['wordmark']['gap'], 48)
@@ -73,7 +73,7 @@ class AnimationTests(unittest.TestCase):
             with self.subTest(canvas=canvas_size):
                 config = {'canvas': {'width': canvas_size, 'height': canvas_size},
                           'motion': {'preset': 'whole-icon'},
-                          'wordmark': {'text': 'Logo', 'font': str(font), 'color': 'black'}}
+                          'wordmark': {'text': 'Logo', 'font': str(font), 'motion': {'preset': 'hop', 'user_request': 'Use hops.'}, 'color': 'black'}}
                 animation, report = self.build(self.asset, config)
                 c = report['composition']
                 icon_width = c['settled_icon_bounds'][2]-c['settled_icon_bounds'][0]
@@ -90,7 +90,7 @@ class AnimationTests(unittest.TestCase):
             with self.subTest(override=override):
                 config = {'canvas': {'width': 800, 'height': 760, 'icon_width': 400},
                           'motion': {'preset': 'whole-icon'},
-                          'wordmark': {'text': 'Logo', 'font': str(font), 'color': 'black', **override}}
+                          'wordmark': {'text': 'Logo', 'font': str(font), 'motion': {'preset': 'hop', 'user_request': 'Use hops.'}, 'color': 'black', **override}}
                 self.build(self.asset, config)
                 self.assertEqual(config['wordmark']['size'], override.get('size', 72))
                 self.assertEqual(config['wordmark']['gap'], override.get('gap', 48))
@@ -98,14 +98,14 @@ class AnimationTests(unittest.TestCase):
     def test_small_explicit_gap_cannot_hide_motion_overlap(self):
         font = Path('/System/Library/Fonts/Supplemental/Arial.ttf')
         if not font.exists(): self.skipTest('Arial unavailable')
-        self.config['wordmark'] = {'text': 'Logo', 'font': str(font), 'color': 'black', 'size': 72, 'gap': 0}
+        self.config['wordmark'] = {'text': 'Logo', 'font': str(font), 'motion': {'preset': 'hop', 'user_request': 'Use hops.'}, 'color': 'black', 'size': 72, 'gap': 0}
         with self.assertRaisesRegex(ValueError, 'overlaps'):
             self.build(self.asset, self.config)
 
     def test_long_name_is_not_shrunk_or_truncated(self):
         font = Path('/System/Library/Fonts/Supplemental/Arial.ttf')
         if not font.exists(): self.skipTest('Arial unavailable')
-        self.config['wordmark'] = {'text': 'A' * 100, 'font': str(font), 'size': 30, 'color': '#222222'}
+        self.config['wordmark'] = {'text': 'A' * 100, 'font': str(font), 'motion': {'preset': 'hop', 'user_request': 'Use hops.'}, 'size': 30, 'color': '#222222'}
         with self.assertRaisesRegex(ValueError, 'fit|wide'):
             self.build(self.asset, self.config)
 

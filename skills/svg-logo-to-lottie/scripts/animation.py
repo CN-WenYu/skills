@@ -8,13 +8,15 @@ from motion_core import keys, layer
 from typography import shape_text
 from svg_geometry import group_transform
 from svg_paths import union
+from configuration import DecisionRequired, validate_wordmark_motion
 
 
 def plan_wordmark(text, wordmark, foreground_end):
     if not text:
         return [], None, 0
     options = wordmark.get('motion', {})
-    preset = options.get('preset', 'hop')
+    validate_wordmark_motion(options)
+    preset = options.get('preset')
     size = wordmark['size']
     duration = options.get('duration', .62)
     start = options.get('start', max(0, foreground_end-.2))
@@ -23,6 +25,18 @@ def plan_wordmark(text, wordmark, foreground_end):
     anchors = options.get('anchor', 'baseline')
     planned, envelopes = [], []
     units = text['units']
+    authored = None
+    if 'tracks' in options:
+        tracks = options['tracks']
+        if tracks[0].get('target') == 'line':
+            units = [{'bounds': text['bounds'], 'shapes': [s for u in units for s in u['shapes']]}]
+            authored = tracks
+        else:
+            assignments = [i for track in tracks for i in track['units']]
+            if sorted(assignments) != list(range(len(units))):
+                raise DecisionRequired(f'Wordmark tracks must cover shaped units 0..{len(units)-1} exactly once; connected writing is indivisible.')
+            by_unit = {i: track for track in tracks for i in track['units']}
+            authored = [by_unit[i] for i in range(len(units))]
     if preset == 'gather' and len(units)<2:
         raise ValueError('Spacing convergence needs independently shaped units; choose another text effect for connected writing or a single unit.')
     if preset in ('rise','fade','reveal'):
@@ -31,23 +45,30 @@ def plan_wordmark(text, wordmark, foreground_end):
     for index, unit in enumerate(units):
         b = unit['bounds']
         anchor = [(b[0]+b[2])/2, 0 if anchors == 'baseline' else (b[1]+b[3])/2]
-        t = start + index*step
-        if preset == 'hop':
-            beats = [(t, amplitude, 92, 0), (t+duration*.48, -amplitude*.39, 102.5, 100),
-                     (t+duration*.72, amplitude*.11, 99, 100), (t+duration, 0, 100, 100)]
-        elif preset == 'rise':
-            beats = [(t, amplitude*.5, 100, 0), (t+duration, 0, 100, 100)]
+        easing = [.25, 0, .75, 1]
+        if authored is not None:
+            track = authored[index]
+            beats = [(f['time'], f['offset'][1]*size, f['scale'], f['opacity']) for f in track['keyframes']]
+            x_offsets = [f['offset'][0]*size for f in track['keyframes']]
+            easing = track.get('easing', easing)
         else:
-            beats = [(t, 0, 100, 0), (t+duration, 0, 100, 100)]
-        spread = (anchor[0]-center_x)*.16 if preset == 'gather' and len(units)>1 else 0
-        x_offsets = [spread] + [0] * (len(beats)-1) if preset == 'gather' else [0]*len(beats)
+            t = start + index*step
+            if preset == 'hop':
+                beats = [(t, amplitude, 92, 0), (t+duration*.48, -amplitude*.39, 102.5, 100),
+                         (t+duration*.72, amplitude*.11, 99, 100), (t+duration, 0, 100, 100)]
+            elif preset == 'rise':
+                beats = [(t, amplitude*.5, 100, 0), (t+duration, 0, 100, 100)]
+            else:
+                beats = [(t, 0, 100, 0), (t+duration, 0, 100, 100)]
+            spread = (anchor[0]-center_x)*.16 if preset == 'gather' and len(units)>1 else 0
+            x_offsets = [spread] + [0] * (len(beats)-1) if preset == 'gather' else [0]*len(beats)
         boxes = [[anchor[0]+(b[0]-anchor[0])*s/100, anchor[1]+(b[1]-anchor[1])*s/100+dy,
                   anchor[0]+(b[2]-anchor[0])*s/100, anchor[1]+(b[3]-anchor[1])*s/100+dy]
                  for _, dy, s, _ in beats]
         boxes = [[b[0]+dx,b[1],b[2]+dx,b[3]] for b,dx in zip(boxes,x_offsets)]
         envelope = union(boxes)
         planned.append({'unit': unit, 'anchor': anchor, 'beats': beats, 'x_offsets':x_offsets,
-                        'reveal':preset=='reveal', 'bounds': envelope})
+                        'reveal':preset=='reveal', 'bounds': envelope, 'easing': easing})
         envelopes.append(envelope)
     return planned, union(envelopes), max(p['beats'][-1][0] for p in planned)
 
@@ -67,9 +88,9 @@ def compile_wordmark(planned, wordmark, text, width, top, fps, frames):
             {'ty': 'fl', 'c': {'a': 0, 'k': fill[:3]+[1]}, 'o': {'a': 0, 'k': fill[3]*100}, 'r': 1}, group_transform()]}
         item = layer(f'Wordmark {index+1}', [group], frames, anchor, position)
         item['ks']['p'] = keys([(t, [position[0]+dx, position[1]+dy, 0])
-                               for (t,dy,_,_),dx in zip(beats,p['x_offsets'])], fps)
-        item['ks']['s'] = keys([(t, [s,s,100]) for t,_,s,_ in beats], fps)
-        item['ks']['o'] = keys([(t, [o]) for t,_,_,o in beats], fps)
+                               for (t,dy,_,_),dx in zip(beats,p['x_offsets'])], fps, p['easing'])
+        item['ks']['s'] = keys([(t, [s,s,100]) for t,_,s,_ in beats], fps, p['easing'])
+        item['ks']['o'] = keys([(t, [o]) for t,_,_,o in beats], fps, p['easing'])
         if p['reveal']:
             item['hasMask'] = True
             b = p['unit']['bounds']
@@ -224,9 +245,11 @@ def build_animation(asset, config):
                   'settled_wordmark_bounds':[(width-text['width'])/2,text_top,(width+text['width'])/2,
                                              text_top+text['bounds'][3]-text['bounds'][1]] if text else None,
                   'wordmark_layers':[t['nm'] for t in text_layers],
-                  'wordmark_motion': {'preset':wordmark.get('motion',{}).get('preset','hop'),
+                  'wordmark_motion': {'preset':wordmark['motion'].get('preset','authored'),
+                      'rationale':wordmark['motion'].get('rationale'),
                       'user_request':wordmark.get('motion',{}).get('user_request'),
-                      'beats':[{'layer':item['nm'],'frames':[{'frame':round(t*fps,3),'offset_y':dy} for t,dy,_,_ in p['beats']]}
+                      'beats':[{'layer':item['nm'],'frames':[{'frame':round(t*fps,3),'offset_x':dx,'offset_y':dy}
+                               for (t,dy,_,_),dx in zip(p['beats'],p['x_offsets'])]}
                                for item,p in zip(text_layers,planned)]} if text else None,
                   'entrances':entrances,'drawings':drawings,
                   'export_background':background['type'],'backplate_outline':outline,

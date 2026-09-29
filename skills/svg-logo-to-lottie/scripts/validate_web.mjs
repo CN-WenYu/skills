@@ -161,14 +161,17 @@ try {
     samples.push({frame, ...state, screenshot: `frames/${filename}`});
   }
   for (const unit of report.composition?.wordmark_motion?.beats ?? []) {
-    const baseline = samples.at(-1).roleAnchorY[unit.layer];
     for (const beat of unit.frames) {
       const sample = samples.find(s => Math.abs(s.frame-beat.frame) < .002);
-      const actual = sample?.roleAnchorY[unit.layer];
       // Hidden layers need not have their transform updated by Lottie until visible.
       if (sample?.roleOpacity[unit.layer] < .001) continue;
-      if (!Number.isFinite(actual) || Math.abs(actual-baseline-beat.offset_y) > 1)
-        errors.push(`Name unit ${unit.layer} missed its vertical beat at frame ${beat.frame}`);
+      for (const [axis, offset] of [['X', beat.offset_x], ['Y', beat.offset_y]]) {
+        if (offset === undefined) continue;
+        const baseline = samples.at(-1)[`roleAnchor${axis}`][unit.layer];
+        const actual = sample?.[`roleAnchor${axis}`][unit.layer];
+        if (!Number.isFinite(actual) || Math.abs(actual-baseline-offset) > 1)
+          errors.push(`Name unit ${unit.layer} missed its ${axis} beat at frame ${beat.frame}`);
+      }
     }
   }
   if (!pathsPerFrame.at(-1)) errors.push('Settled frame is blank');

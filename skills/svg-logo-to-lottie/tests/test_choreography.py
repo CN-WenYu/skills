@@ -106,7 +106,7 @@ class ChoreographyTests(unittest.TestCase):
         font = Path('/System/Library/Fonts/Supplemental/Arial Bold.ttf')
         if not font.exists(): self.skipTest('Arial Bold unavailable')
         self.config['wordmark'] = {'text':'Connect','font':str(font),'color':'#202020',
-                                   'motion':{'start':.4,'stagger':.02,'user_request':'Use the default hops.'}}
+                                   'motion':{'preset':'hop','start':.4,'stagger':.02,'user_request':'Use the default hops.'}}
         (animation,report),config = self.build()
         self.assertEqual(config['wordmark']['weight'],700)
         self.assertEqual(report['typography']['weight'],700)

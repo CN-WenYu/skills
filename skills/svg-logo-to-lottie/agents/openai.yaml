@@ -1,4 +1,4 @@
 interface:
   display_name: "Logo to Lottie"
   short_description: "Design logo-specific splash motion with real Lottie previews"
-  default_prompt: "Use $svg-logo-to-lottie with my supplied logo/name or verified app-project branding. Use the available native question tool for unresolved choices, list every numbered text effect, and design foreground actions from the artwork relationships with actual Lottie previews for review."
+  default_prompt: "Use $svg-logo-to-lottie to analyze my logo and name together, propose a coherent splash animation, resolve only missing choices using the host's question capabilities, and generate actual Lottie previews for review."

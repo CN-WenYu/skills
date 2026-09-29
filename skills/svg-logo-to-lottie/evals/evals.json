@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "Animate this logo and add the application name Nova.",
-      "expected_output": "Identify standalone versus app-project context. Reuse supplied branding, list real font choices and ask unresolved color/corners. Use the host native question tool when supported and show every numbered text effect, with hop recommended, plus delegation/custom intent. Use concrete textual questions only on tool unavailability/failure. Do not draft before answers; preselection is not consent.",
+      "expected_output": "Identify standalone versus app-project context. Reuse supplied branding, recommend relevant real fonts and ask unresolved color/corners. Analyze icon and name together, propose one coherent motion plan and use the native question tool for material unresolved choices. Do not repeat built-in numbering/free-text options or force a complete preset menu. Use text fallback only if needed; wait for required answers.",
       "files": [
         "fixtures/logo.svg"
       ]
@@ -68,7 +68,7 @@
     {
       "id": 9,
       "prompt": "Animate this network mark for the app Link. Use sensible defaults; app-purpose details are optional.",
-      "expected_output": "Analyze the nodes and actual open connection as a relationship. Choose supported actions with meaningful cause/effect, not a copied generic bounce. The user explicitly accepted defaults, so record hop acceptance without reasking text motion; reuse explicit project/user choices. Optional purpose does not block work.",
+      "expected_output": "Analyze actual nodes and connection as a relationship. Design coordinated logo/name motion with meaningful cause/effect, not a generic bounce. Treat sensible defaults as delegation to a context-appropriate choice; record the actual delegation and explicit preset or tracks. Optional purpose does not block work.",
       "files": [
         "fixtures/network.svg"
       ]
@@ -76,7 +76,7 @@
     {
       "id": 10,
       "prompt": "Create a restrained splash for Seal from this interlocking emblem. Use defaults.",
-      "expected_output": "Recognize the indivisible silhouette and consider a restrained entrance or stillness. The user explicitly requested defaults: record hop acceptance without reasking text motion. Ask only unresolved visual choices and avoid reading restrained style as a conflicting text selection.",
+      "expected_output": "Recognize the indivisible silhouette and consider a restrained entrance or stillness. Keep the name quiet and legible, respecting restrained tone when choosing within the defaults delegation. Do not equate defaults with hops. Ask only unresolved branding choices.",
       "files": [
         "fixtures/seal.svg"
       ]
@@ -100,7 +100,7 @@
     {
       "id": 13,
       "prompt": "Make a splash for this logo. The name is provided but no font is supplied.",
-      "expected_output": "Scan the local machine with fonts NAME. Present 3–5 distinct available families at real weight 700 covering the whole name, with recommendation, and ask the user to choose. Fewer candidates must be reported honestly; do not silently select first or list uninstalled fonts.",
+      "expected_output": "Run fonts NAME and verify real weight and complete name coverage. Recommend a suitable installed face with a small number of meaningfully different alternatives within the tool limits; offer more if requested. Report fewer candidates honestly, and do not silently select the first or list uninstalled fonts.",
       "files": [
         "fixtures/logo.svg"
       ]
@@ -108,7 +108,7 @@
     {
       "id": 14,
       "prompt": "Keep the gradient logo background and accept smooth vector reconstruction. Make the splash restrained.",
-      "expected_output": "Reconstruction consent does not decide corners/font/color, first-frame background visibility or text motion. Bundle unresolved choices through the available native tool, including every numbered text effect. Do not bypass gradient tracing refusal with direct VTracer.",
+      "expected_output": "Reconstruction consent does not decide corners/font/color, first-frame background visibility or text motion. Bundle substantive unresolved choices and propose coordinated logo/name motion through the native tool without a fixed numbered menu. Do not bypass gradient tracing refusal with direct VTracer.",
       "files": [
         "fixtures/icon-backplate.svg"
       ]
@@ -116,7 +116,7 @@
     {
       "id": 15,
       "prompt": "Within this app project, make a splash animation using its existing branding. The active splash uses a bundled Brand-Bold.ttf and light/dark text tokens; both themes are supported.",
-      "expected_output": "Resolve actual target branding/font/theme and motion references before trusting prompt assertions. Reuse verified values and prepare both supported themes. Present the complete numbered text menu only if its choice/delegation is missing. No generic project scanner or new dependency.",
+      "expected_output": "Resolve actual target branding/font/theme and motion references. Reuse verified values and prepare both supported themes. Analyze unresolved text motion as part of the composition, asking only if not selected or delegated. No generic project scanner or new dependency.",
       "files": [
         "fixtures/icon-backplate.svg"
       ]
@@ -124,7 +124,7 @@
     {
       "id": 16,
       "prompt": "Can I choose between two different motion approaches? This project also has light and dark themes.",
-      "expected_output": "Offer substantively different foreground concepts, not merely delay/scale variants. Keep branding and the selected text treatment consistent; ask the full numbered text menu if unresolved. Adapt selected motion to verified themes without silently multiplying variants.",
+      "expected_output": "Offer substantively different whole-composition concepts, not delay/scale variants. Preserve branding and prior text choices unless the user requests changes. Include unresolved text in the proposal rather than adding a preset questionnaire. Adapt selected motion to verified themes without multiplying variants.",
       "files": [
         "fixtures/network.svg"
       ]
@@ -160,7 +160,7 @@
     {
       "id": 21,
       "prompt": "This is a scratch directory, not an app project. Animate my attached icon as a splash for Nova. Ask me before deciding unspecified backgrounds, fonts, corners or material roles. Ask before installing missing dependencies. FontTools is installed but HarfBuzz is missing.",
-      "expected_output": "Inspect the supplied asset without searching unrelated projects. List real bold font candidates with shaping pending when HarfBuzz is missing. Prefer the native question tool for unresolved scope/corners/color/font and all numbered text effects; keep installation approval separate and additional choreography optional. On tool success do not duplicate the questionnaire; on failure/unavailability ask concretely in text. Wait for actual answers before generation.",
+      "expected_output": "Inspect supplied artwork without unrelated project searches. List relevant real bold fonts with shaping pending when HarfBuzz is missing. Use native questions for unresolved scope/corners/color/font and the coordinated motion proposal; separate installation authorization. Do not duplicate numbering/free text or require an extra-preview answer. Wait for required answers.",
       "files": [
         "fixtures/icon-backplate.svg"
       ]
@@ -214,7 +214,7 @@
     {
       "id": 28,
       "prompt": "A fictional utility has an articulated pointer, small separate dots and a completion ring in its logo. Design a meaningful startup animation; I have not selected text motion. A native question tool is available with unrestricted options.",
-      "expected_output": "Inspect actual groups and relationships. Propose a supported action concept with sensible pivot, curved travel/contact and occlusion if relevant, not a default fade/bounce for every part or a copied cleaning storyboard. Use the native tool to list 1 hop, 2 rise, 3 fade, 4 spacing convergence, 5 directional reveal, 6 agent choice, 7 custom intent, each concrete and with a recommendation. Do not hide effects behind Other or treat the recommendation as answered. Match claimed actions to exported primitives.",
+      "expected_output": "Inspect actual groups and relationships before proposing supported icon/name choreography with meaningful pivots, travel and hierarchy. Use a few relevant options only when a design choice is unresolved; no compulsory seven-item menu or universal hops. Do not duplicate native numbering or Other. Match described effects to supported primitives.",
       "files": []
     },
     {
@@ -228,7 +228,7 @@
     {
       "id": 30,
       "prompt": "Ask me about text animation. The native question tool accepts at most three options but supports a free-text question prompt. The artwork requires no other decision.",
-      "expected_output": "Prefer one native free-text question with all seven numbered concrete choices and descriptions in its prompt, accepting a number or custom description. Do not collapse supported effects into Other, omit effects to fit three options, or launch a separate textual questionnaire after successful delivery. Leave generation pending until the answer.",
+      "expected_output": "Analyze the artwork/name and offer at most three relevant, distinct choices with a contextual recommendation. Use plain option labels when the UI supplies numbering; rely on built-in free text for other descriptions. Do not put seven options in the question body, split the menu or duplicate a successful prompt. Wait for the answer.",
       "files": [
         "fixtures/logo.svg"
       ]
@@ -287,6 +287,38 @@
       "expected_output": "Treat this as a delivery failure rather than successful intake. Preserve the prior font answer. Recover the actual unanswered choices through a working native tool or a persistent text fallback with a brief explanation; do not repeat only a questions-sent status, claim task completion or invent answers.",
       "files": [
         "fixtures/icon-backplate.svg"
+      ]
+    },
+    {
+      "id": 38,
+      "prompt": "Animate the supplied mark for Photo Collage. Keep the approved artwork, white Arial Bold name and transparent canvas. I want the name to assemble from above, below, left and right with the logo. Design the detailed timing yourself; do not modify skill source.",
+      "expected_output": "Analyze actual geometry and shaped text, then use authored wordmark tracks for four-direction convergence with em offsets and explicit beats. Preserve final kerning, ligatures and connected units; do not downgrade to gather or ask for permission to use an already supported capability. Record the actual instruction/delegation, check full motion bounds, and keep final approval pending.",
+      "files": [
+        "fixtures/logo.svg"
+      ]
+    },
+    {
+      "id": 39,
+      "prompt": "For Easy Scanner, I want a luminous beam to sweep over the name, disappear, and only then have the whole name fade in. The text and font are confirmed. Do not edit the skill source. Explain the plan before generating.",
+      "expected_output": "Distinguish the requested beam sequence from the built-in masked reveal. State the exact unsupported beam/masking primitive, a scoped reusable extension path subject to authorization, and a clearly labeled supported alternative if useful. Do not call reveal a beam or a fade, silently downgrade, or repeatedly ask for the same decision. No source or project extension before its scope is authorized.",
+      "files": [
+        "fixtures/logo.svg"
+      ]
+    },
+    {
+      "id": 40,
+      "prompt": "Create a restrained splash for International Document Archive using the supplied mark. The name, Arial Bold, colors and layout are already confirmed. Choose the motion for me; one version is enough.",
+      "expected_output": "Analyze name length, actual artwork and reading hierarchy. Choose a quiet coherent whole-line treatment when suitable, explicitly encoded as a recipe or line track; do not force hops, a seven-item menu, another font question or preview-count approval. Check fit without silently shrinking/truncating. Preserve the actual delegation and separate generation from approval.",
+      "files": [
+        "fixtures/seal.svg"
+      ]
+    },
+    {
+      "id": 41,
+      "prompt": "Ask me to choose a text treatment for this mark. There is no native question tool.",
+      "expected_output": "Analyze the material first, then give a short numbered text list of relevant choices and invite a different description. Do not require all presets or a separate numbered Custom item. Yield for the answer without generating dependent output.",
+      "files": [
+        "fixtures/logo.svg"
       ]
     }
   ]

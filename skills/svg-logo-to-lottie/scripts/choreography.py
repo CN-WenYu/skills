@@ -9,6 +9,46 @@ from configuration import DecisionRequired, allowed, pair, positive
 from motion_core import keys, layer, static
 
 
+def validate_easing(easing):
+    if not isinstance(easing, list) or len(easing) != 4 or any(isinstance(x, bool) or not isinstance(x, (float, int)) or not math.isfinite(x) or not 0 <= x <= 1 for x in easing):
+        raise DecisionRequired('Use four cubic-bezier coordinates in [0,1]; express overshoot explicitly in keyframes so bounds remain provable.')
+
+
+def validate_keyframes(frames, extras=()):
+    if not isinstance(frames, list) or not frames:
+        raise DecisionRequired('Each track requires explicit keyframes; one identity frame means stationary.')
+    previous = -1
+    drawing = any(isinstance(f, dict) and 'draw' in f for f in frames)
+    for index, frame in enumerate(frames):
+        allowed(frame, {'time', 'offset', 'scale', 'opacity'} | set(extras), 'motion keyframe')
+        if not {'time', 'offset', 'scale', 'opacity'} <= frame.keys():
+            raise DecisionRequired('Every keyframe needs time, offset, scale and opacity; no implicit carry-forward.')
+        positive(frame['time'], 'keyframe time', -1e-9)
+        if frame['time'] < 0:
+            raise DecisionRequired('Keyframe time must be nonnegative.')
+        if frame['time'] <= previous:
+            raise DecisionRequired('Track keyframe times must be strictly increasing.')
+        previous = frame['time']
+        pair(frame['offset'], 'keyframe offset')
+        positive(frame['scale'], 'keyframe scale percent')
+        angle = frame.get('rotation', 0)
+        if isinstance(angle, bool) or not isinstance(angle, (float, int)) or not math.isfinite(angle):
+            raise DecisionRequired('Rotation must be a finite angle in degrees.')
+        if 'curve' in frame:
+            curve = frame['curve']
+            allowed(curve, {'out', 'in'}, 'outgoing position curve')
+            if set(curve) != {'out', 'in'} or index == len(frames)-1:
+                raise DecisionRequired('A position curve needs out/in handles and a following keyframe.')
+            for handle in curve.values(): pair(handle, 'relative position curve handle')
+        for field in ('opacity', 'draw') if drawing else ('opacity',):
+            value = frame.get(field)
+            if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or not 0 <= value <= 100:
+                raise DecisionRequired(f'Every keyframe {field} must be between 0 and 100.')
+    last = frames[-1]
+    if last['offset'] != [0, 0] or last['scale'] != 100 or last['opacity'] != 100 or last.get('rotation', 0) != 0 or (drawing and last['draw'] != 100):
+        raise DecisionRequired('Tracks must settle at the original geometry: offset [0,0], scale 100, opacity 100, rotation 0, draw 100.')
+
+
 def validate_motion(motion):
     allowed(motion, {'rationale', 'tracks'}, 'material-specific motion')
     if not isinstance(motion.get('rationale'), str) or not motion['rationale'].strip():
@@ -37,40 +77,8 @@ def validate_motion(motion):
             ids = track['element_ids']
             if not isinstance(ids, list) or not ids or any(not isinstance(x, str) or not x for x in ids) or len(set(ids)) != len(ids):
                 raise DecisionRequired('Track element_ids must be a nonempty list of unique SVG IDs.')
-        easing = track.setdefault('easing', [.25, 0, .75, 1])
-        if not isinstance(easing, list) or len(easing) != 4 or any(isinstance(x, bool) or not isinstance(x, (float, int)) or not math.isfinite(x) or not 0 <= x <= 1 for x in easing):
-            raise DecisionRequired('Use four cubic-bezier coordinates in [0,1]; express overshoot explicitly in keyframes so bounds remain provable.')
-        frames = track.get('keyframes')
-        if not isinstance(frames, list) or not frames:
-            raise DecisionRequired('Each track requires explicit keyframes; one identity frame means stationary.')
-        previous = -1
-        drawing = any(isinstance(f, dict) and 'draw' in f for f in frames)
-        for index, frame in enumerate(frames):
-            allowed(frame, {'time', 'offset', 'scale', 'opacity', 'draw', 'rotation', 'curve'}, 'motion keyframe')
-            if not {'time', 'offset', 'scale', 'opacity'} <= frame.keys():
-                raise DecisionRequired('Every keyframe needs time, offset, scale and opacity; no implicit carry-forward.')
-            positive(frame['time'], 'keyframe time', -1e-9)
-            if frame['time'] <= previous:
-                raise DecisionRequired('Track keyframe times must be strictly increasing.')
-            previous = frame['time']
-            pair(frame['offset'], 'keyframe offset in source SVG units')
-            positive(frame['scale'], 'keyframe scale percent')
-            angle = frame.get('rotation', 0)
-            if isinstance(angle, bool) or not isinstance(angle, (float, int)) or not math.isfinite(angle):
-                raise DecisionRequired('Rotation must be a finite angle in degrees.')
-            if 'curve' in frame:
-                curve = frame['curve']
-                allowed(curve, {'out', 'in'}, 'outgoing position curve')
-                if set(curve) != {'out', 'in'} or index == len(frames)-1:
-                    raise DecisionRequired('A position curve needs out/in handles and a following keyframe.')
-                for handle in curve.values(): pair(handle, 'relative position curve handle')
-            for field in ('opacity', 'draw') if drawing else ('opacity',):
-                value = frame.get(field)
-                if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or not 0 <= value <= 100:
-                    raise DecisionRequired(f'Every keyframe {field} must be between 0 and 100.')
-        last = frames[-1]
-        if last['offset'] != [0, 0] or last['scale'] != 100 or last['opacity'] != 100 or last.get('rotation', 0) != 0 or (drawing and last['draw'] != 100):
-            raise DecisionRequired('Tracks must settle at the original geometry: offset [0,0], scale 100, opacity 100, rotation 0, draw 100.')
+        validate_easing(track.setdefault('easing', [.25, 0, .75, 1]))
+        validate_keyframes(track.get('keyframes'), {'draw', 'rotation', 'curve'})
 
 
 def resolve_tracks(asset, motion):

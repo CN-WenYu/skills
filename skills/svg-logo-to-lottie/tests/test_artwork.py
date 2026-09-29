@@ -126,7 +126,7 @@ class ArtworkTests(unittest.TestCase):
         font = Path('/System/Library/Fonts/Supplemental/Arial Bold.ttf')
         if not font.exists(): self.skipTest('Arial unavailable')
         self.config['wordmark'] = {'text': 'Logo', 'font': str(font), 'color': 'white', 'size': 30, 'gap': 18,
-                                   'motion':{'user_request':'Use default hops.'}}
+                                   'motion':{'preset':'hop','user_request':'Use default hops.'}}
         _, _, report = self.prepare()
         icon, *glyphs = report['animated_bounds']
         self.assertTrue(glyphs)

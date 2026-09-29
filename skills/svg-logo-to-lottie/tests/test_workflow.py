@@ -215,7 +215,7 @@ class WorkflowTests(unittest.TestCase):
         runtime = os.environ.get('LOTTIE_PLAYWRIGHT_PACKAGE')
         if not runtime or not PLAYER.exists(): self.skipTest('Set LOTTIE_PLAYWRIGHT_PACKAGE and LOTTIE_PLAYER_PACKAGE for Web tests')
         self.config['wordmark'] = {'text': 'Logo', 'font': '/System/Library/Fonts/Supplemental/Arial Bold.ttf',
-                                  'size': 30, 'color': '#202020', 'motion':{'user_request':'Use default hops.'}}
+                                  'size': 30, 'color': '#202020', 'motion':{'preset':'hop','user_request':'Use default hops.'}}
         result, report = self.run_cli('draft')
         self.assertEqual(result.returncode, 0, report)
         directory = self.root / 'draft'
@@ -253,7 +253,7 @@ class WorkflowTests(unittest.TestCase):
         for theme,matte,ink in [('light','#fafafa','#202020'),('dark','#181818','#ffffff')]:
             self.root = original/theme
             self.root.mkdir()
-            self.config['wordmark'] = {'text':'Nova','font':str(BOLD),'color':ink,'motion':{'user_request':'Use default hops.'}}
+            self.config['wordmark'] = {'text':'Nova','font':str(BOLD),'color':ink,'motion':{'preset':'hop','user_request':'Use default hops.'}}
             self.config['preview_background'] = matte
             self.config['export_background'] = {'type':'solid','color':matte}
             result, report = self.run_cli('draft')
@@ -296,7 +296,7 @@ class WorkflowTests(unittest.TestCase):
         self.config['artwork']['backplate'] = {'mode': 'embedded', 'element_ids': ['plate'],
                                                'corners': {'mode': 'rounded', 'radius': 20}}
         self.config['wordmark'] = {'text': 'Logo', 'font': '/System/Library/Fonts/Supplemental/Arial Bold.ttf',
-                                  'size': 30, 'color': '#202020', 'motion':{'user_request':'Use default hops.'}}
+                                  'size': 30, 'color': '#202020', 'motion':{'preset':'hop','user_request':'Use default hops.'}}
         root = self.root
         for preset in ('backplate-first', 'static-backplate', 'whole-icon'):
             with self.subTest(preset=preset):
@@ -372,7 +372,7 @@ class AuthoredWorkflowTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'font, color'):
             load_config(path)
         chosen = report['candidates'][0]
-        config['wordmark'].update(font=chosen['font'], font_index=chosen['font_index'], color='#efefef',motion={'user_request':'Use default hops.'})
+        config['wordmark'].update(font=chosen['font'], font_index=chosen['font_index'], color='#efefef',motion={'preset':'hop','user_request':'Use default hops.'})
         path.write_text(json.dumps(config))
         resolved = load_config(path)
         self.assertEqual(resolved['wordmark']['color'], '#efefef')
@@ -380,7 +380,7 @@ class AuthoredWorkflowTests(unittest.TestCase):
 
     def test_explicit_missing_font_is_never_replaced(self):
         config = network_config()
-        config['wordmark'] = {'text':'Name','font':'missing-brand.ttf','color':'white','motion':{'user_request':'Use default hops.'}}
+        config['wordmark'] = {'text':'Name','font':'missing-brand.ttf','color':'white','motion':{'preset':'hop','user_request':'Use default hops.'}}
         path = self.root/'config.json'
         path.write_text(json.dumps(config))
         with patch('typography.font_candidates',side_effect=AssertionError('must not substitute')):
@@ -433,8 +433,8 @@ class AuthoredWorkflowTests(unittest.TestCase):
         config = network_config()
         config['wordmark'] = {'text':'Name','font':str(BOLD),'color':'white'}
         path = self.root/'config.json'
-        for motion in ({}, {'preset':'hop'}, {'preset':'rise','stagger':0}, {'preset':'fade'},
-                       {'preset':'gather'}, {'preset':'reveal'}, {'amplitude':0}, {'stagger_window':0}):
+        for motion in ({'preset':'hop'}, {'preset':'rise','stagger':0}, {'preset':'fade'},
+                       {'preset':'gather'}, {'preset':'reveal'}, {'preset':'hop','amplitude':0}, {'preset':'hop','stagger_window':0}):
             config['wordmark']['motion'] = motion
             path.write_text(json.dumps(config))
             with self.assertRaisesRegex(ValueError, 'user_request'):
@@ -449,7 +449,7 @@ class AuthoredWorkflowTests(unittest.TestCase):
         if not runtime or not player.exists() or not BOLD.exists():
             self.skipTest('Web runtime and Arial Bold required')
         config = network_config()
-        config['wordmark'] = {'text':'Link','font':str(BOLD),'size':32,'color':'#202020', 'motion':{'user_request':'Use default hops.'}}
+        config['wordmark'] = {'text':'Link','font':str(BOLD),'size':32,'color':'#202020', 'motion':{'preset':'hop','user_request':'Use default hops.'}}
         del config['app_name']
         path = self.root/'config.json'
         path.write_text(json.dumps(config))
