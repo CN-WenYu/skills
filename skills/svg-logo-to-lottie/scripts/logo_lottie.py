@@ -134,6 +134,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest='command', required=True)
     sub.add_parser('doctor')
+    p = sub.add_parser('compare')
+    p.add_argument('--output', type=Path, required=True)
+    p.add_argument('--variant', nargs=2, action='append', required=True, metavar=('LABEL', 'DRAFT_DIRECTORY'))
     p = sub.add_parser('size')
     p.add_argument('source', type=Path)
     p = sub.add_parser('fonts')
@@ -162,6 +165,9 @@ def main():
     args = parser.parse_args()
     if args.command == 'doctor':
         report = doctor()
+    elif args.command == 'compare':
+        from preview import write_comparison
+        report = write_comparison(args.output, args.variant)
     elif args.command == 'size':
         from preview import animation_size
         payload = args.source.read_bytes()

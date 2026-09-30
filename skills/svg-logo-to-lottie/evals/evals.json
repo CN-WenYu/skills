@@ -320,6 +320,12 @@
       "files": [
         "fixtures/logo.svg"
       ]
+    },
+    {
+      "id": 42,
+      "prompt": "Put my three approved-to-review animation drafts in one preview page. Side-by-side players were too small and clipped on my narrow screen. Do not change the animations.",
+      "expected_output": "Use compare with descriptive labels and one active full-width preview, not a tiled grid. Preserve independent drafts and downloads; expose a standalone link. Check switching and height on a narrow viewport, including expanded license content and long labels. Do not overwrite existing drafts or treat review selection as final approval. Explain that sharing requires linked draft directories.",
+      "files": []
     }
   ]
 }

@@ -142,16 +142,38 @@ def render_preview(animation_json, config, player, license_text):
     return f'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Logo animation preview</title><style>
-body{{margin:0;background:#ececec;color:#222;font:15px system-ui;text-align:center}}
-main{{padding:24px}}#stage{{margin:16px auto;width:min(100%,{width}px);aspect-ratio:{width}/{height};background:{matte_css};}}
-#animation{{width:100%;height:100%}}button,select{{font:inherit;padding:8px;margin:4px}}
-details{{max-width:720px;margin:24px auto;text-align:left}}pre{{white-space:pre-wrap}}
+*{{box-sizing:border-box}}
+:root{{color-scheme:light}}
+body{{margin:0;background:#f3f4f5;color:#202326;font:15px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}}
+main{{max-width:960px;margin:0 auto;padding:40px 28px 24px}}
+h1{{margin:0 0 28px;font-size:clamp(22px,4vw,30px);font-weight:650;letter-spacing:-.025em;text-wrap:balance}}
+.preview{{padding:28px 16px;background:#e8eaed;border-radius:16px}}
+#stage{{margin:0 auto;width:min(100%,{width}px);aspect-ratio:{width}/{height};background:{matte_css};box-shadow:0 12px 32px rgba(20,26,32,.09)}}
+#animation{{width:100%;height:100%}}
+.toolbar{{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:24px}}
+.playback{{display:flex;align-items:center;gap:12px;flex-wrap:wrap}}
+button,select{{min-height:44px;border:1px solid #b8bec5;border-radius:8px;background:#fff;color:#202326;font:inherit}}
+button{{padding:10px 18px;font-weight:600;cursor:pointer}}
+select{{padding:9px 32px 9px 12px;cursor:pointer;max-width:100%}}
+label{{display:flex;align-items:center;gap:10px;color:#505861;font-size:14px}}
+#download-json{{background:#202326;border-color:#202326;color:#fff}}
+button:active{{transform:translateY(1px)}}
+button:disabled{{opacity:.5;cursor:not-allowed}}
+:focus-visible{{outline:3px solid #2864b4;outline-offset:4px}}
+::selection{{background:#d0e1f6;color:#172c45}}
+.hint{{margin:12px 0 0;color:#505861;font-size:13px}}
+details{{margin-top:32px;padding-top:16px;border-top:1px solid #cdd1d6;color:#505861;font-size:13px}}
+summary{{cursor:pointer;width:fit-content;padding:8px 0;text-underline-offset:3px}}
+pre{{white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.7 ui-monospace,monospace;max-width:75ch}}
+@media(hover:hover){{button:hover,select:hover{{background:#e9edf1}}#download-json:hover{{background:#394049;border-color:#394049}}summary:hover{{color:#202326;text-decoration:underline}}}}
+@media(max-width:600px){{main{{padding:24px 16px}}h1{{margin-bottom:20px}}.preview{{padding:16px 8px}}.toolbar{{align-items:stretch;gap:16px}}.playback{{width:100%;justify-content:space-between}}label{{flex-wrap:wrap;gap:4px 8px}}#download-json{{width:100%}}}}
 </style></head><body><main><h1>Logo animation preview</h1>
-<div id="stage"><div id="animation"></div></div>
-<button id="replay">Replay</button><button id="download-json" type="button">Download Lottie JSON</button><label>Preview background <select id="matte">
+<div class="preview"><div id="stage" role="img" aria-label="Logo animation preview"><div id="animation"></div></div></div>
+<div class="toolbar"><div class="playback"><button id="replay" type="button">Replay</button><label>Preview background <select id="matte">
 <option value="original">Selected</option><option value="#ffffff">Light</option><option value="#181818">Dark</option>
-<option value="checker">Checkerboard</option></select></label>
-<p>Background selection affects this preview only.</p>
+<option value="checker">Checkerboard</option></select></label></div>
+<button id="download-json" type="button">Download Lottie JSON</button></div>
+<p class="hint">Background selection affects this preview only.</p>
 <details><summary>Player license</summary><pre>{html.escape(license_text)}</pre></details></main>
 <script id="animation-data" type="application/json">{animation_json}</script>
 <script>{script}</script><script>
@@ -165,6 +187,11 @@ document.getElementById('download-json').onclick=()=>{{
   setTimeout(()=>URL.revokeObjectURL(url),1000);
 }};
 document.getElementById('matte').onchange=e=>{{let stage=document.getElementById('stage');stage.style.background=e.target.value==='original'?{json.dumps(matte_css)}:e.target.value==='checker'?'repeating-conic-gradient(#ccc 0% 25%,#fff 0% 50%) 0 / 24px 24px':e.target.value;}};
+if(window.parent!==window){{
+  const reportHeight=()=>window.parent.postMessage({{type:'lottie-preview-height',height:Math.ceil(document.querySelector('main').getBoundingClientRect().height)}},'*');
+  new ResizeObserver(reportHeight).observe(document.querySelector('main'));
+  reportHeight();
+}}
 </script></body></html>'''
 
 
@@ -214,3 +241,55 @@ def verify_draft(directory):
     if manifest.get('download_filename') != download_filename(json.loads((directory/'config.json').read_text())):
         raise ValueError('Download filename does not match the application name. Regenerate and revalidate the draft.')
     return manifest
+
+
+def write_comparison(output, variants):
+    """Link immutable previews in one viewport; never copy animation payloads."""
+    import os
+    from urllib.parse import quote
+    output = Path(output).resolve()
+    if output.exists():
+        raise ValueError('Comparison output exists. Choose a new HTML path.')
+    if len(variants) < 2:
+        raise ValueError('A comparison needs at least two named variants.')
+    options, labels = [], set()
+    for label, directory in variants:
+        if not label.strip() or label in labels:
+            raise ValueError('Variant labels must be nonempty and unique.')
+        labels.add(label)
+        directory = Path(directory).resolve()
+        verify_draft(directory)
+        url = quote(Path(os.path.relpath(directory/'preview.html', output.parent)).as_posix(), safe='/')
+        options.append((label, url))
+    choices = ''.join(f'<option value="{html.escape(url, quote=True)}">{html.escape(label)}</option>' for label,url in options)
+    first_label, first_url = (html.escape(value, quote=True) for value in options[0])
+    page = f'''<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Compare logo animations</title><style>
+*{{box-sizing:border-box}}body{{margin:0;background:#f3f4f5;color:#202326;font:15px/1.5 system-ui,sans-serif}}
+header{{max-width:960px;margin:auto;padding:24px 28px 0}}h1{{font-size:24px;letter-spacing:-.025em;margin:0 0 16px}}
+.controls{{display:flex;align-items:center;gap:12px;flex-wrap:wrap}}label{{font-weight:600}}
+select{{min-width:0;max-width:100%;min-height:44px;padding:8px 12px;border:1px solid #b8bec5;border-radius:8px;background:white;color:#202326;font:inherit;flex:1}}
+a{{color:#244e83;padding:10px 0;text-underline-offset:3px}}a:hover{{color:#172c45}}
+:focus-visible{{outline:3px solid #2864b4;outline-offset:4px}}::selection{{background:#d0e1f6;color:#172c45}}
+p{{font-size:13px;color:#505861;margin:12px 0 0}}iframe{{display:block;border:0;width:100%;height:900px}}
+@media(max-width:600px){{header{{padding:20px 16px 0}}h1{{font-size:22px}}.controls a{{width:100%}}}}
+</style></head><body><header><h1>Compare logo animations</h1>
+<div class="controls"><label for="variant">Version</label><select id="variant">{choices}</select>
+<a id="open-preview" href="{first_url}" target="_blank" rel="noopener">Open separately</a></div>
+<p>One version at a time. Replay, background and download controls are inside each preview.</p></header>
+<iframe id="preview" title="{first_label}" src="{first_url}"></iframe>
+<script>
+const picker=document.getElementById('variant'),frame=document.getElementById('preview'),link=document.getElementById('open-preview');
+picker.onchange=()=>{{frame.style.height='900px';frame.src=picker.value;frame.title=picker.selectedOptions[0].textContent;link.href=picker.value;}};
+window.addEventListener('message',event=>{{
+  if(event.source!==frame.contentWindow||event.data?.type!=='lottie-preview-height')return;
+  const height=event.data.height;
+  if(Number.isFinite(height)&&height>0&&height<=100000)frame.style.height=Math.ceil(height)+'px';
+}});
+</script></body></html>'''
+    output.parent.mkdir(parents=True, exist_ok=True)
+    with output.open('x') as stream:
+        stream.write(page)
+    return {'status': 'ready', 'comparison': str(output), 'variants': len(options),
+            'note': 'Linked previews remain independent; comparison does not validate or approve them.'}

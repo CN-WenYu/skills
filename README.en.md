@@ -86,6 +86,8 @@ Exports compact redundant keyframes and numeric notation by default, with a JSON
 
 Read [motion design and limits](skills/svg-logo-to-lottie/references/motion-design.md), [backgrounds and corners](skills/svg-logo-to-lottie/references/backgrounds-and-svg.md), [text configuration and export](skills/svg-logo-to-lottie/references/lottie-export.md), or [image conversion](skills/image-to-svg/references/conversion.md) as needed.
 
+Multiple versions use `compare`: a top version selector shows one full-width preview at a time, with a separate-open link. Players are not tiled by default. Keep the comparison page and draft directories in their relative locations when sharing.
+
 ## Maintaining Skills
 
 Each skill is a directory and must include `SKILL.md`:
