@@ -154,7 +154,8 @@ h1{{margin:0 0 28px;font-size:clamp(22px,4vw,30px);font-weight:650;letter-spacin
 .playback{{display:flex;align-items:center;gap:12px;flex-wrap:wrap}}
 button,select{{min-height:44px;border:1px solid #b8bec5;border-radius:8px;background:#fff;color:#202326;font:inherit}}
 button{{padding:10px 18px;font-weight:600;cursor:pointer}}
-select{{padding:9px 32px 9px 12px;cursor:pointer;max-width:100%}}
+select{{appearance:none;padding:9px 42px 9px 12px;cursor:pointer;max-width:100%;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='m1 1 5 5 5-5' fill='none' stroke='%23505861' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}}
+@media(forced-colors:active){{select{{appearance:auto;background-image:none}}}}
 label{{display:flex;align-items:center;gap:10px;color:#505861;font-size:14px}}
 #download-json{{background:#202326;border-color:#202326;color:#fff}}
 button:active{{transform:translateY(1px)}}
@@ -165,9 +166,14 @@ button:disabled{{opacity:.5;cursor:not-allowed}}
 details{{margin-top:32px;padding-top:16px;border-top:1px solid #cdd1d6;color:#505861;font-size:13px}}
 summary{{cursor:pointer;width:fit-content;padding:8px 0;text-underline-offset:3px}}
 pre{{white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.7 ui-monospace,monospace;max-width:75ch}}
-@media(hover:hover){{button:hover,select:hover{{background:#e9edf1}}#download-json:hover{{background:#394049;border-color:#394049}}summary:hover{{color:#202326;text-decoration:underline}}}}
+@media(hover:hover){{button:hover,select:hover{{background-color:#e9edf1}}#download-json:hover{{background:#394049;border-color:#394049}}summary:hover{{color:#202326;text-decoration:underline}}}}
 @media(max-width:600px){{main{{padding:24px 16px}}h1{{margin-bottom:20px}}.preview{{padding:16px 8px}}.toolbar{{align-items:stretch;gap:16px}}.playback{{width:100%;justify-content:space-between}}label{{flex-wrap:wrap;gap:4px 8px}}#download-json{{width:100%}}}}
-</style></head><body><main><h1>Logo animation preview</h1>
+html.embedded main{{max-width:none;padding:12px}}
+html.embedded h1{{display:none}}
+html.embedded .preview{{padding:0;background:none;border-radius:0}}
+html.embedded .toolbar{{margin-top:16px}}
+html.embedded details{{margin-top:16px}}
+</style><script>if(window.parent!==window)document.documentElement.classList.add('embedded');</script></head><body><main><h1>Logo animation preview</h1>
 <div class="preview"><div id="stage" role="img" aria-label="Logo animation preview"><div id="animation"></div></div></div>
 <div class="toolbar"><div class="playback"><button id="replay" type="button">Replay</button><label>Preview background <select id="matte">
 <option value="original">Selected</option><option value="#ffffff">Light</option><option value="#181818">Dark</option>
@@ -188,6 +194,9 @@ document.getElementById('download-json').onclick=()=>{{
 }};
 document.getElementById('matte').onchange=e=>{{let stage=document.getElementById('stage');stage.style.background=e.target.value==='original'?{json.dumps(matte_css)}:e.target.value==='checker'?'repeating-conic-gradient(#ccc 0% 25%,#fff 0% 50%) 0 / 24px 24px':e.target.value;}};
 if(window.parent!==window){{
+  window.addEventListener('message',event=>{{
+    if(event.source===window.parent&&event.data?.type==='lottie-preview-replay')window.logoAnimation.goToAndPlay(0,true);
+  }});
   const reportHeight=()=>window.parent.postMessage({{type:'lottie-preview-height',height:Math.ceil(document.querySelector('main').getBoundingClientRect().height)}},'*');
   new ResizeObserver(reportHeight).observe(document.querySelector('main'));
   reportHeight();
@@ -243,8 +252,8 @@ def verify_draft(directory):
     return manifest
 
 
-def write_comparison(output, variants):
-    """Link immutable previews in one viewport; never copy animation payloads."""
+def write_comparison(output, variants, groups=None):
+    """Link immutable previews in a responsive review list."""
     import os
     from urllib.parse import quote
     output = Path(output).resolve()
@@ -252,7 +261,12 @@ def write_comparison(output, variants):
         raise ValueError('Comparison output exists. Choose a new HTML path.')
     if len(variants) < 2:
         raise ValueError('A comparison needs at least two named variants.')
-    options, labels = [], set()
+    membership = {}
+    for group, label in groups or []:
+        if not group.strip() or label in membership:
+            raise ValueError('Groups need nonempty names and each variant can belong to only one group.')
+        membership[label] = group
+    sections, labels = {}, set()
     for label, directory in variants:
         if not label.strip() or label in labels:
             raise ValueError('Variant labels must be nonempty and unique.')
@@ -260,30 +274,42 @@ def write_comparison(output, variants):
         directory = Path(directory).resolve()
         verify_draft(directory)
         url = quote(Path(os.path.relpath(directory/'preview.html', output.parent)).as_posix(), safe='/')
-        options.append((label, url))
-    choices = ''.join(f'<option value="{html.escape(url, quote=True)}">{html.escape(label)}</option>' for label,url in options)
-    first_label, first_url = (html.escape(value, quote=True) for value in options[0])
+        sections.setdefault(membership.get(label, ''), []).append((label, url))
+    if membership.keys() - labels:
+        raise ValueError('Group references an unknown variant label.')
+    content = []
+    for group, entries in sections.items():
+        cards = ''.join(
+            f'<article><div class="card-heading"><h3>{html.escape(label)}</h3>'
+            f'<a href="{html.escape(url, quote=True)}" target="_blank" rel="noopener">Open separately</a></div>'
+            f'<iframe title="{html.escape(label, quote=True)}" src="{html.escape(url, quote=True)}"></iframe></article>'
+            for label, url in entries)
+        content.append(f'<section><div class="group-heading"><h2>{html.escape(group or "Versions")}</h2>'
+                       f'<button type="button">Replay group</button></div><div class="grid">{cards}</div></section>')
     page = f'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Compare logo animations</title><style>
 *{{box-sizing:border-box}}body{{margin:0;background:#f3f4f5;color:#202326;font:15px/1.5 system-ui,sans-serif}}
-header{{max-width:960px;margin:auto;padding:24px 28px 0}}h1{{font-size:24px;letter-spacing:-.025em;margin:0 0 16px}}
-.controls{{display:flex;align-items:center;gap:12px;flex-wrap:wrap}}label{{font-weight:600}}
-select{{min-width:0;max-width:100%;min-height:44px;padding:8px 12px;border:1px solid #b8bec5;border-radius:8px;background:white;color:#202326;font:inherit;flex:1}}
-a{{color:#244e83;padding:10px 0;text-underline-offset:3px}}a:hover{{color:#172c45}}
-:focus-visible{{outline:3px solid #2864b4;outline-offset:4px}}::selection{{background:#d0e1f6;color:#172c45}}
-p{{font-size:13px;color:#505861;margin:12px 0 0}}iframe{{display:block;border:0;width:100%;height:900px}}
-@media(max-width:600px){{header{{padding:20px 16px 0}}h1{{font-size:22px}}.controls a{{width:100%}}}}
-</style></head><body><header><h1>Compare logo animations</h1>
-<div class="controls"><label for="variant">Version</label><select id="variant">{choices}</select>
-<a id="open-preview" href="{first_url}" target="_blank" rel="noopener">Open separately</a></div>
-<p>One version at a time. Replay, background and download controls are inside each preview.</p></header>
-<iframe id="preview" title="{first_label}" src="{first_url}"></iframe>
-<script>
-const picker=document.getElementById('variant'),frame=document.getElementById('preview'),link=document.getElementById('open-preview');
-picker.onchange=()=>{{frame.style.height='900px';frame.src=picker.value;frame.title=picker.selectedOptions[0].textContent;link.href=picker.value;}};
+main{{max-width:1600px;margin:auto;padding:28px}}h1{{font-size:26px;letter-spacing:-.025em;margin:0 0 8px}}
+section{{margin-top:32px}}h2{{font-size:20px;margin:0}}h3{{font-size:16px;margin:0;overflow-wrap:anywhere}}
+.group-heading,.card-heading{{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}}
+.grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,480px),1fr));gap:20px;align-items:start}}
+article{{min-width:0;background:#f3f4f5;border:1px solid #d5d9dd;border-radius:12px;padding:12px}}
+a{{color:#244e83;text-underline-offset:3px;padding:10px 0}}a:hover{{color:#172c45}}
+button{{min-height:44px;padding:8px 16px;border:1px solid #b8bec5;border-radius:8px;background:white;color:inherit;font:inherit;cursor:pointer}}
+button:hover{{background:#e9edf1}}:focus-visible{{outline:3px solid #2864b4;outline-offset:4px}}
+p{{color:#505861;margin:0}}iframe{{display:block;border:0;width:100%;height:900px}}
+@media(max-width:600px){{main{{padding:20px 12px}}article{{padding:8px}}.grid{{gap:16px}}}}
+</style></head><body><main><h1>Compare logo animations</h1>
+<p>Browse versions below. Open separately for a larger view; download each version inside its preview.</p>
+{''.join(content)}</main><script>
+const frames=[...document.querySelectorAll('iframe')];
+document.querySelectorAll('section button').forEach(button=>{{
+  button.onclick=()=>button.closest('section').querySelectorAll('iframe').forEach(frame=>frame.contentWindow.postMessage({{type:'lottie-preview-replay'}},'*'));
+}});
 window.addEventListener('message',event=>{{
-  if(event.source!==frame.contentWindow||event.data?.type!=='lottie-preview-height')return;
+  const frame=frames.find(frame=>frame.contentWindow===event.source);
+  if(!frame||event.data?.type!=='lottie-preview-height')return;
   const height=event.data.height;
   if(Number.isFinite(height)&&height>0&&height<=100000)frame.style.height=Math.ceil(height)+'px';
 }});
@@ -291,5 +317,5 @@ window.addEventListener('message',event=>{{
     output.parent.mkdir(parents=True, exist_ok=True)
     with output.open('x') as stream:
         stream.write(page)
-    return {'status': 'ready', 'comparison': str(output), 'variants': len(options),
+    return {'status': 'ready', 'comparison': str(output), 'variants': len(variants),
             'note': 'Linked previews remain independent; comparison does not validate or approve them.'}

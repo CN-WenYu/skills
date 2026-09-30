@@ -28,7 +28,8 @@ class ComparisonTests(unittest.TestCase):
             output = root/'compare.html'
             command = [sys.executable, str(Path(__file__).resolve().parents[1]/'scripts/logo_lottie.py'),
                        'compare', '--output', str(output), '--variant', 'One <test>', str(drafts[0]),
-                       '--variant', 'Two', str(drafts[1])]
+                       '--variant', 'Two', str(drafts[1]),
+                       '--group', 'Theme <pair>', 'One <test>', '--group', 'Theme <pair>', 'Two']
             result = subprocess.run(command, capture_output=True, text=True)
             self.assertEqual(result.returncode, 0, result.stdout+result.stderr)
             page = output.read_text()
@@ -36,7 +37,14 @@ class ComparisonTests(unittest.TestCase):
             self.assertIn('two%23', page)
             self.assertIn('One &lt;test&gt;', page)
             self.assertNotIn('UNIQUE_PAYLOAD', page)
-            self.assertEqual(page.count('<iframe'), 1)
+            self.assertEqual(page.count('<iframe'), 2)
+            self.assertEqual(page.count('<section>'), 1)
+            self.assertIn('Theme &lt;pair&gt;', page)
+            unknown = command.copy()
+            unknown[unknown.index(str(output))] = str(root/'unknown.html')
+            unknown[-1] = 'Missing'
+            self.assertNotEqual(subprocess.run(unknown, capture_output=True).returncode, 0)
+            self.assertFalse((root/'unknown.html').exists())
             original = output.read_bytes()
             self.assertNotEqual(subprocess.run(command, capture_output=True).returncode, 0)
             self.assertEqual(output.read_bytes(), original)

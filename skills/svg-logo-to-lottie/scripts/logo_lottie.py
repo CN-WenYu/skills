@@ -137,6 +137,7 @@ def main():
     p = sub.add_parser('compare')
     p.add_argument('--output', type=Path, required=True)
     p.add_argument('--variant', nargs=2, action='append', required=True, metavar=('LABEL', 'DRAFT_DIRECTORY'))
+    p.add_argument('--group', nargs=2, action='append', metavar=('GROUP', 'VARIANT_LABEL'))
     p = sub.add_parser('size')
     p.add_argument('source', type=Path)
     p = sub.add_parser('fonts')
@@ -167,7 +168,7 @@ def main():
         report = doctor()
     elif args.command == 'compare':
         from preview import write_comparison
-        report = write_comparison(args.output, args.variant)
+        report = write_comparison(args.output, args.variant, args.group)
     elif args.command == 'size':
         from preview import animation_size
         payload = args.source.read_bytes()
